@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfLa2"
         xmlns:c="clr-namespace:WpfLa2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="150" Width="350">
+        Title="MainWindow" Height="300" Width="350">
     <Window.Resources>
         <c:MainVm x:Key="cx"/>
     </Window.Resources>
@@ -15,12 +15,13 @@
             Background="{Binding Color}"
             >
             <Label 
-                Content="{Binding Message}"
+                Content="{Binding Message1}"
                 FontSize="32"
                 />
             
             <Label 
-                Content="{Binding Hp}"
+                Content="{Binding Message2}"
+                FontSize="32"
             />
             <Button
                 Command="{Binding StartMacroCommand}"
@@ -28,9 +29,9 @@
                 Start IIS macro
             </Button>
             <Button
-                Command="{Binding MarkupCommand}"
+                Command="{Binding StartAssistCommand}"
                     Width="150" Height="30">
-                La Window markup
+                Start Assist macro
             </Button>
         </StackPanel>
     

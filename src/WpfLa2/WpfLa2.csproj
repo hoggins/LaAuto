@@ -60,8 +60,10 @@
     <Compile Include="La\LaMarkup.cs" />
     <Compile Include="La\LaWndSnapshot.cs" />
     <Compile Include="Macro\IMacros.cs" />
+    <Compile Include="Macro\InjectContext.cs" />
     <Compile Include="Macro\MacroProc.cs" />
-    <Compile Include="Macro\SimpleMacro.cs" />
+    <Compile Include="Macro\IisMacro.cs" />
+    <Compile Include="Macro\WatchWndMacro.cs" />
     <Compile Include="MainVm.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">

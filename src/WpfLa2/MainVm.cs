@@ -12,6 +12,9 @@ namespace WpfLa2
   public class MainVm : ViewModelBase
   {
     public static MainVm Instance;
+
+    #region VM
+
     private string _color;
     public string Color
     {
@@ -19,18 +22,18 @@ namespace WpfLa2
       set => SetProperty(ref _color, value);
     }
     
-    private string _message;
-    public string Message
+    private string _message1;
+    public string Message1
     {
-      get => _message;
-      set => SetProperty(ref _message, value);
+      get => _message1;
+      set => SetProperty(ref _message1, value);
     }
     
-    private string _hp;
-    public string Hp
+    private string _message2;
+    public string Message2
     {
-      get => _message;
-      set => SetProperty(ref _message, value);
+      get => _message2;
+      set => SetProperty(ref _message2, value);
     }
     
     public MainVm()
@@ -58,27 +61,58 @@ namespace WpfLa2
       }
     }
     
-    private MacroProc _activeMacro;
+    private ICommand _startAssistCommand;
+    public ICommand StartAssistCommand
+    {
+      get
+      {
+        return _startAssistCommand ?? (_startAssistCommand = new CommandHandler(() => StartAssist(), ()=> true));
+      }
+    }
+
+    #endregion
+    
+    private MacroProc _iisMacro;
+    private MacroProc _assistMacro;
+    
+    private int WarnCount;
 
     private async void StartMacro()
     {
-      _activeMacro?.Dispose();
+      _iisMacro?.Dispose();
 
       var t = await GetTargetWnd();
       
-      _activeMacro = new MacroProc(new SimpleMacro(t));
+      _iisMacro = new MacroProc(new IisMacro(t));
     }
 
     
-    
+    private async void StartAssist()
+    {
+      _assistMacro?.Dispose();
+
+      SetMessage2("Go to wnd to watch target HP");
+      var w = await GetTargetWnd();
+      SetMessage2("Go to wnd to click assis");
+      IntPtr t;
+      while (true)
+      {
+        t = await GetTargetWnd();
+        if (t != w)
+          break;
+      }
+      
+      
+      _assistMacro = new MacroProc(new AssistMacro(w, t));
+    }
     
     
     private async void MarkupLaWindow()
     {
       var target = await GetTargetWnd().ConfigureAwait(false);
       
-      _activeMacro?.Dispose();
-      _activeMacro = new MacroProc(new WatchWndMacro(target));
+      _iisMacro?.Dispose();
+      _iisMacro = new MacroProc(new WatchWndMacro(target));
       return;
       
         
@@ -108,163 +142,25 @@ namespace WpfLa2
     {
       if (Instance == null)
         return;
-      Instance.Message = text;
+      Instance.Message1 = text;
+    }
+
+    public static void SetMessage2(string text)
+    {
+      if (Instance == null)
+        return;
+      Instance.Message2 = text;
     }
     
     public static void SetWarn(bool w)
     {
       if (Instance == null)
         return;
-      Instance.Color = w ? "Red" : "White";
+      if (w)
+        Interlocked.Increment(ref Instance.WarnCount);
+      else
+        Interlocked.Decrement(ref Instance.WarnCount);
+      Instance.Color = Instance.WarnCount > 0 ? "Red" : "White";
     }
-
-
-    private void WatchHP()
-    {
-      var hp = CalcHP();
-      Hp = hp.ToString();
-    }
-
-    private double? CalcHpSafe()
-    {
-      try
-      {
-        return CalcHP();
-      }
-      catch (Exception e)
-      {
-        Console.WriteLine(e);
-        return null;
-      }
-    }
-
-    private double CalcHP()
-    {
-      //var bmp = (Bitmap)Bitmap.FromFile("screenshot.png");
-      var bmp = memScreenShot();
-
-      var filledHp1 = unchecked((int) 0xFF7D4442);
-      var filledHp2 = unchecked((int) 0xFF711F1D);
-      
-//      var emptyHp1 = unchecked((int) 0xFF40322E);
-//      var emptyHp3 = System.Drawing.Color.FromArgb(65, 49, 44).ToArgb();
-//      var emptyHp4 = System.Drawing.Color.FromArgb(49, 28, 24).ToArgb();
-//      var emptyHp5 = -12570323;
-//      var emptyHp2 = unchecked((int) 0xFF3A231E);
-
-      
-      var hpFrom = FindTopLeft(bmp, new Point(0, 300), new Point(200, 360), filledHp1);
-      var hpTo = FindTopRight(bmp, new Point(0, 300), new Point(200, 360), filledHp1);
-
-//      var emptyFrom = FindTopLeft(bmp, new Point(0, 300), new Point(200, 360), emptyHp5);
-//      var emptyTo = FindTopRight(bmp, new Point(0, 300), new Point(200, 360), emptyHp5);
-
-      
-      
-//      using (Graphics g = Graphics.FromImage(bmp))
-//      {
-//        DrawPoint(g, hpFrom);
-//        DrawPoint(g, hpTo);
-//        DrawPoint(g, emptyFrom);
-//        DrawPoint(g, emptyTo);
-//        bmp.Save("screenshot3.png");  // saves the image
-//      }
-      
-      bmp.Dispose();
-
-      if (!hpFrom.HasValue || !hpTo.HasValue)
-        throw new Exception("hp bars not visible");
-
-//      if (!emptyFrom.HasValue || !emptyTo.HasValue)
-//        return 1.5;
-      var emptyFrom = hpTo;
-      var emptyTo = (Point?)new Point(172, hpTo.Value.Y);
-
-      var hpLen = hpTo.Value.X - hpFrom.Value.X;
-      var emptyLen = emptyTo.Value.X - emptyFrom.Value.X;
-
-      var hp = hpLen / (double) (hpLen + emptyLen);
-      return hp;
-    }
-
-    private static void DrawPoint(Graphics g, Point? hpFrom)
-    {
-      if (hpFrom.HasValue)
-        g.DrawRectangle(Pens.Blue, hpFrom.Value.X, hpFrom.Value.Y, 1, 1);
-    }
-
-    private static Point? FindTopLeft(Bitmap bmp, Point from, Point to, int tc)
-    {
-      var hits = 0;
-      for (int y = from.Y; y < to.Y-1; y++)
-      {
-        for (int x = from.X; x < to.X; x++)        
-        {
-          var c = bmp.GetPixel(x, y);
-          var argb = c.ToArgb();
-          if (argb == tc)
-          {
-            if (++hits >= 3)
-              return new Point(x - 2, y);
-            else
-            {
-              var a = 0;
-            }
-          }
-          else
-          {
-            hits = 0;
-          }
-        }
-      }
-
-      return null;
-    }
-
-    private static Point? FindTopRight(Bitmap bmp, Point from, Point to, int targetColor)
-    {
-      var hits = 0;
-      for (int y = from.Y; y < to.Y; y++)
-      {
-        for (int x = to.X - 1; x >= @from.X; x--)        
-        {
-          var c = bmp.GetPixel(x, y);
-          var argb = c.ToArgb();
-          if (argb == targetColor)
-          {
-            if (++hits >= 3)
-              return new Point(x + 2, y);
-          }
-          else
-          {
-            hits = 0;
-          }
-        }
-      }
-
-      return null;
-    }
-
-    private Bitmap memScreenShot()
-    {
-      Bitmap bmp = new Bitmap(500, 500);
-      using (Graphics g = Graphics.FromImage(bmp))
-      {
-        g.CopyFromScreen(0, 0, 0, 0, new Size(500, 500));
-        
-      }
-
-      return bmp;
-    }
-    private void takeScreenShot()
-    {
-      Bitmap bmp = new Bitmap(500, 500);
-      using (Graphics g = Graphics.FromImage(bmp))
-      {
-        g.CopyFromScreen(0, 0, 0, 0, new Size(500, 500));
-        bmp.Save("screenshot.png");  // saves the image
-      }                 
-    }
-    
   }
 }
