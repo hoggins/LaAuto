@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoIt;
 
@@ -9,17 +10,28 @@ namespace WpfLa2
   public class AssistMacro : IMacros
   {
     private IntPtr _watchWnd;
-    private readonly IntPtr _actWnd;
+    private IntPtr _actWnd;
     private int? _lastHp;
 
-    public AssistMacro(IntPtr watchWnd, IntPtr actWnd)
+    public async Task Initialize(CancellationToken ct)
     {
-      _watchWnd = watchWnd;
-      _actWnd = actWnd;
+      MainVm.SetMessage2("Go to wnd to watch target HP");
+      _watchWnd = await MacroModel.GetClientObserve(ct);
+      
+      MainVm.SetMessage2("Go to wnd to click assis");
+      IntPtr t = default;
+      while (!ct.IsCancellationRequested)
+      {
+        t = await MacroModel.GetClientTarget(ct);
+        if (t != _watchWnd)
+          break;
+      }
+
+      _actWnd = t;
     }
 
-    public void Run()
-    {
+    public void Run(CancellationToken ct)
+    { 
       var canSwitch = false;
       while (true)
       {
@@ -59,15 +71,15 @@ namespace WpfLa2
   {
     private IntPtr _targetWnd;
 
-    public IisMacro(IntPtr targetWnd)
+    public async Task Initialize(CancellationToken ct)
     {
-      _targetWnd = targetWnd;
+      _targetWnd = await MacroModel.GetClientTarget(ct);
     }
 
-    public void Run()
+    public void Run(CancellationToken ct)
     {
       var lastUse = new DateTime();
-      while (true)
+      while (!ct.IsCancellationRequested)
       {
 
         using (new InjectContext())
@@ -81,7 +93,7 @@ namespace WpfLa2
         if (lastUse - DateTime.Now < TimeSpan.FromSeconds(2.5))
           Thread.Sleep(2500);
 
-        for (int i = 35; i >= 0; i--)
+        for (int i = 35; i >= 0 && !ct.IsCancellationRequested; i--)
         {
           using (var snapshot = new LaWndSnapshot(_targetWnd))
           {

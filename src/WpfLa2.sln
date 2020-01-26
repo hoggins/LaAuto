@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfLa2", "WpfLa2\WpfLa2.csproj", "{53BDDEDB-182A-41ED-BD76-775A69AD8BBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextVision", "TextVision\TextVision.csproj", "{7386F241-2675-4994-93F9-F5963C28F50D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recognition", "Recognition\Recognition.csproj", "{049D344F-DFFF-4874-AD0E-BB0F63099B08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2566111A-BB54-46BC-80AD-167010C6FD23}"
@@ -18,10 +16,6 @@ Global
 		{53BDDEDB-182A-41ED-BD76-775A69AD8BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53BDDEDB-182A-41ED-BD76-775A69AD8BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53BDDEDB-182A-41ED-BD76-775A69AD8BBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7386F241-2675-4994-93F9-F5963C28F50D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7386F241-2675-4994-93F9-F5963C28F50D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7386F241-2675-4994-93F9-F5963C28F50D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7386F241-2675-4994-93F9-F5963C28F50D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{049D344F-DFFF-4874-AD0E-BB0F63099B08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{049D344F-DFFF-4874-AD0E-BB0F63099B08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{049D344F-DFFF-4874-AD0E-BB0F63099B08}.Release|Any CPU.ActiveCfg = Release|Any CPU

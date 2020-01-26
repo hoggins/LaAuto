@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WpfLa2
 {
@@ -7,14 +8,14 @@ namespace WpfLa2
   {
     private IntPtr _targetWnd;
 
-    public WatchWndMacro(IntPtr targetWnd)
+    public async Task Initialize(CancellationToken ct)
     {
-      _targetWnd = targetWnd;
+      _targetWnd = await MacroModel.GetClientTarget(ct);
     }
 
-    public void Run()
+    public void Run(CancellationToken ct)
     {
-      while (true)
+      while (!ct.IsCancellationRequested)
       {
         Thread.Sleep(500);
         using (var snapshot = new LaWndSnapshot(_targetWnd))

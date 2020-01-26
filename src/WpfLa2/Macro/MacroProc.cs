@@ -1,24 +1,24 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace WpfLa2
 {
   public class MacroProc : IDisposable
   {
-    private Thread _trd;
+    private readonly CancellationTokenSource _cts;
 
     public MacroProc(IMacros macro)
     {
-      _trd = new Thread(macro.Run)
-      {
-        IsBackground = true
-      };
-      _trd.Start();
+      _cts = new CancellationTokenSource();
+      Task.Run(async () => await macro.Initialize(_cts.Token), _cts.Token)
+        .ContinueWith((ot) => macro.Run(_cts.Token), _cts.Token);
     }
 
     public void Dispose()
     {
-      _trd.Abort();
+      _cts.Cancel();
+      _cts.Dispose();
     }
   }
 }

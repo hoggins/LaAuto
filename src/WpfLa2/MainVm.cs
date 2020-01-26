@@ -80,62 +80,31 @@ namespace WpfLa2
     private async void StartMacro()
     {
       _iisMacro?.Dispose();
-
-      var t = await GetTargetWnd();
-      
-      _iisMacro = new MacroProc(new IisMacro(t));
+      _iisMacro = new MacroProc(new IisMacro());
     }
 
     
     private async void StartAssist()
     {
       _assistMacro?.Dispose();
-
-      SetMessage2("Go to wnd to watch target HP");
-      var w = await GetTargetWnd();
-      SetMessage2("Go to wnd to click assis");
-      IntPtr t;
-      while (true)
-      {
-        t = await GetTargetWnd();
-        if (t != w)
-          break;
-      }
-      
-      
-      _assistMacro = new MacroProc(new AssistMacro(w, t));
+      _assistMacro = new MacroProc(new AssistMacro());
     }
     
     
     private async void MarkupLaWindow()
     {
-      var target = await GetTargetWnd().ConfigureAwait(false);
-      
       _iisMacro?.Dispose();
-      _iisMacro = new MacroProc(new WatchWndMacro(target));
+      _iisMacro = new MacroProc(new WatchWndMacro());
       return;
       
         
       var sw = new Stopwatch();
+      var target = await MacroModel.GetClientObserve();
       using (var snapshot = new LaWndSnapshot(target))
       {
         SetMessage("p: " + snapshot.GetPartyHp()
                    + " t: " + snapshot.GetTargetHp());
       }
-    }
-
-    private async Task<IntPtr> GetTargetWnd()
-    {
-      for (int i = 0; i < 15; i++)
-      {
-        var hwnd = AutoItX.WinGetHandle();
-        var title = AutoItX.WinGetTitle(hwnd);
-        if (title.Contains("Lineage"))
-          return hwnd;
-        await Task.Delay(1000);
-      }
-
-      return default(IntPtr);
     }
 
     public static void SetMessage(string text)
