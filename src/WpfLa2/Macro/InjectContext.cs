@@ -11,7 +11,7 @@ namespace WpfLa2
 
     public InjectContext()
     {
-      MainVm.SetWarn(true);
+//      MainVm.SetWarn(true);
       Thread.Sleep(1000);
       
       Monitor.Enter(Lock);
@@ -23,7 +23,7 @@ namespace WpfLa2
     {
       AutoItX.WinActivate(_hwnd);
       Monitor.Exit(Lock);
-      MainVm.SetWarn(false);
+//      MainVm.SetWarn(false);
     }
   }
 }

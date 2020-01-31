@@ -19,16 +19,15 @@ namespace WpfLa2
     
     private static async Task<IntPtr> GetWnd(CancellationToken ct = default)
     {
-      for (int i = 0; i < 15; i++)
+      while (true)
       {
         var hwnd = AutoItX.WinGetHandle();
         var title = AutoItX.WinGetTitle(hwnd);
         if (title.Contains("Lineage"))
           return hwnd;
-        await Task.Delay(1000, ct).ConfigureAwait(false);
+      
+        await Task.Delay(500, ct).ConfigureAwait(false);
       }
-
-      return default(IntPtr);
     }
   }
 }

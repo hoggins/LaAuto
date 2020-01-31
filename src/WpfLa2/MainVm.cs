@@ -72,29 +72,32 @@ namespace WpfLa2
 
     #endregion
     
-    private MacroProc _iisMacro;
-    private MacroProc _assistMacro;
+    private MacroBase _iisMacro;
+    private MacroBase _assistMacro;
     
     private int WarnCount;
 
     private async void StartMacro()
     {
       _iisMacro?.Dispose();
-      _iisMacro = new MacroProc(new IisMacro());
+      _iisMacro = new HealMacro();
+      _iisMacro.Start();
     }
 
     
     private async void StartAssist()
     {
       _assistMacro?.Dispose();
-      _assistMacro = new MacroProc(new AssistMacro());
+      _assistMacro = new AssistMacro();
+      _assistMacro.Start();
     }
     
     
     private async void MarkupLaWindow()
     {
       _iisMacro?.Dispose();
-      _iisMacro = new MacroProc(new WatchWndMacro());
+      _iisMacro = new WatchWndMacro();
+      _iisMacro.Start();
       return;
       
         
