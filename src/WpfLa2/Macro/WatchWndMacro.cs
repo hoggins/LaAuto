@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using WpfLa2.La;
+using LaClient;
 
 namespace WpfLa2.Macro
 {
   public class WatchWndMacro : MacroBase
   {
     public override string Title => "Test wnd screenshot";
-    
+
     private IntPtr _targetWnd;
 
     protected override async Task Initialize()
@@ -22,7 +22,7 @@ namespace WpfLa2.Macro
       {
         await Task.Delay(100, Ct).ConfigureAwait(false);
         Thread.Sleep(500);
-        using (var snapshot = new LaWndSnapshot(_targetWnd))
+        using (var snapshot = new LaClientSnapshot(_targetWnd))
         {
           var hp = snapshot.GetPartyHp();
           var thp = snapshot.GetTargetHp();

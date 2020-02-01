@@ -1,25 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Common;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace Recognition
+namespace LaClient
 {
-  public static class Bar
+  public static class LaBar
   {
-    public static int? FindHpBarLength(this Bitmap bmp, Rectangle rect)
+    public static int? FindBarLength(this Image<Hsv, byte> img, Rectangle rect, Tuple<Hsv, Hsv> barColor)
     {
-      var img = new Image<Hsv, byte>(bmp);
-      var mat = new Mat(img.Mat, rect);
+      var oldRoi = img.ROI;
+      img.ROI = rect;
+      using (var hpMask = img.InRange(barColor.Item1, barColor.Item2))
       {
-        var mask = mat.ToImage<Hsv, byte>();
-        //todo color param
-        var hpMask = mask.InRange(new Hsv(0, 181, 109), new Hsv(1, 214, 141));
         var hpLines = LineCorners(hpMask);
+
+        img.ROI = oldRoi;
+
         if (!hpLines.Any())
           return null;
         //todo find best
@@ -51,7 +52,7 @@ namespace Recognition
 //                              || approxContour[1].Y - approxContour[0].Y < 2
             )
               continue;
-            
+
             boxList.Add(CvInvoke.MinAreaRect(approxContour));
 
           }

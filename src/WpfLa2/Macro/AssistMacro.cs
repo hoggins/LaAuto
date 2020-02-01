@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using AutoIt;
-using WpfLa2.La;
+using LaClient;
 
 namespace WpfLa2.Macro
 {
   public class AssistMacro : MacroBase
   {
     public int HpToStartDd { get; set; } = 97;
-    
+
     private IntPtr _watchWnd;
     private IntPtr _actWnd;
     private int? _lastHp;
@@ -20,7 +20,7 @@ namespace WpfLa2.Macro
     {
       Status = "Go to window to watch target HP";
       _watchWnd = await MacroModel.GetClientObserve(Ct);
-      
+
       Status = "Go to window to click assist";
       IntPtr t = default;
       while (!Ct.IsCancellationRequested)
@@ -34,37 +34,37 @@ namespace WpfLa2.Macro
     }
 
     protected override async Task Run()
-    { 
+    {
       var canSwitch = false;
       while (!Ct.IsCancellationRequested)
       {
-        await Task.Delay(1000, Ct).ConfigureAwait(false);
-        using (var snapshot = new LaWndSnapshot(_watchWnd))
-        {
-          var hp = snapshot.GetTargetHp();
-          
-          Status = $"Assist: last {_lastHp} tHP:{hp}%";
-          
-          if (!hp.HasValue)
-            continue;
+        await Task.Delay(500, Ct).ConfigureAwait(false);
+        int? hp;
+        using (var snapshot = new LaClientSnapshot(_watchWnd))
+          hp = snapshot.GetTargetHp();
 
-          if (_lastHp.HasValue && hp > _lastHp)
-            canSwitch = true;
-          
-          if (canSwitch && hp < HpToStartDd)
+        Status = $"Assist: last {_lastHp} tHP:{hp}%";
+
+        if (!hp.HasValue)
+          continue;
+
+        if (_lastHp.HasValue && hp > _lastHp)
+          canSwitch = true;
+
+        if (canSwitch && hp < HpToStartDd)
+        {
+          canSwitch = false;
+          SetWarn(true);
+          using (new InjectContext())
           {
-            canSwitch = false;
-            SetWarn(true);
-            using (new InjectContext())
-            {
-              AutoItX.WinActivate(_actWnd);
-              AutoItX.Send("{NUMPAD0}");
-            }
-            SetWarn(false);
+            AutoItX.WinActivate(_actWnd);
+            AutoItX.Send("{NUMPAD0}");
           }
-          
-          _lastHp = hp;
+
+          SetWarn(false);
         }
+
+        _lastHp = hp;
       }
     }
   }

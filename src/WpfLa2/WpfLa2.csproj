@@ -59,8 +59,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DrawUtil.cs" />
-    <Compile Include="La\LaMarkup.cs" />
-    <Compile Include="La\LaWndSnapshot.cs" />
     <Compile Include="MacroModel.cs" />
     <Compile Include="Macro\AssistMacro.cs" />
     <Compile Include="Macro\IMacroVm.cs" />
@@ -112,6 +110,10 @@
     <Folder Include="AutoItX" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LaClient\LaClient.csproj">
+      <Project>{3b05812b-bc65-4cf1-b977-0640ed30fd53}</Project>
+      <Name>LaClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Recognition\Recognition.csproj">
       <Project>{049d344f-dfff-4874-ad0e-bb0f63099b08}</Project>
       <Name>Recognition</Name>

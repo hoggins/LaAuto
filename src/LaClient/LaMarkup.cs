@@ -1,6 +1,8 @@
+using System;
 using System.Drawing;
+using Emgu.CV.Structure;
 
-namespace WpfLa2.La
+namespace LaClient
 {
   public static class LaMarkup
   {
@@ -9,11 +11,13 @@ namespace WpfLa2.La
     public static Rectangle Party1Frame = Rectangle.FromLTRB(53, 217,184, 251);
     public static Rectangle TargetFrame = Rectangle.FromLTRB(24, 133, 214, 146);
 
-    public static Rectangle PartyRoi;
+    public static Rectangle ShotFrame;
+
+    public static Tuple<Hsv, Hsv> HpRange = Tuple.Create(new Hsv(0, 181, 109), new Hsv(1, 214, 141));
 
     static LaMarkup()
     {
-      PartyRoi = Rectangle.Union(Party1Frame, TargetFrame);
+      ShotFrame = Rectangle.Union(Party1Frame, TargetFrame);
     }
   }
 }

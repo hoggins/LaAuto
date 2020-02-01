@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoIt;
-using WpfLa2.La;
+using LaClient;
 
 namespace WpfLa2.Macro
 {
@@ -25,45 +25,45 @@ namespace WpfLa2.Macro
 
     protected override async Task Run()
     {
-      var lastUse = new DateTime();
+//      var lastUse = new DateTime();
       while (!Ct.IsCancellationRequested)
       {
-
         SetWarn(true);
         using (new InjectContext())
         {
           AutoItX.WinActivate(_targetWnd);
           AutoItX.Send("2");
         }
+
         SetWarn(false);
 
-        lastUse = DateTime.Now;
+//        lastUse = DateTime.Now;
 
-        if (lastUse - DateTime.Now < TimeSpan.FromSeconds(2.5))
-          await Task.Delay(2500, Ct).ConfigureAwait(false);
+//        if (lastUse - DateTime.Now < TimeSpan.FromSeconds(2.5))
+          await Task.Delay(2000, Ct).ConfigureAwait(false);
 
-        for (int i = NoOperationDelay; i >= 0 && !Ct.IsCancellationRequested; i--)
+        for (int i = NoOperationDelay*2; i >= 0 && !Ct.IsCancellationRequested; i--)
         {
-          using (var snapshot = new LaWndSnapshot(_targetWnd))
+          int? hp;
+          using (var snapshot = new LaClientSnapshot(_targetWnd))
+
+            hp = snapshot.GetPartyHp();
+
+          Status = $"t: {i/2} hp:{hp:0}";
+
+          if (hp.HasValue)
           {
-            var hp = snapshot.GetPartyHp();
-
-            Status = $"t: {i} hp:{hp:0}";
-
-            if (hp.HasValue)
+            if (hp < 5)
             {
-              if (hp < 5)
-              {
-                Status = "Consider dead " + DateTime.Now.ToString("g");
-                return;
-              }
-
-              if (hp < PercentToHeal)
-                break;
+              Status = "Consider dead " + DateTime.Now.ToString("g");
+              return;
             }
+
+            if (hp < PercentToHeal)
+              break;
           }
 
-          await Task.Delay(1000, Ct).ConfigureAwait(false);
+          await Task.Delay(500, Ct).ConfigureAwait(false);
         }
       }
     }
