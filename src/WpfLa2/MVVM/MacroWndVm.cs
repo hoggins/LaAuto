@@ -39,6 +39,7 @@ namespace WpfLa2.MVVM
       MacroLaunchers.Add(new MacroLauncher("Test watch window", StartMacro<WatchWndMacro>));
       MacroLaunchers.Add(new MacroLauncher("Heal", StartMacro<HealMacro>));
       MacroLaunchers.Add(new MacroLauncher("Assist", StartMacro<AssistMacro>));
+      MacroLaunchers.Add(new MacroLauncher("Spam button", StartMacro<SpamButtonMacro>));
     }
 
     private void StartMacro<T>() where T : IMacroVm, new()

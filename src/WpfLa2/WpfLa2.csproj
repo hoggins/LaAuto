@@ -67,6 +67,7 @@
     <Compile Include="Macro\InjectContext.cs" />
     <Compile Include="Macro\MacroBase.cs" />
     <Compile Include="Macro\HealMacro.cs" />
+    <Compile Include="Macro\SpamButtonMacro.cs" />
     <Compile Include="Macro\WatchWndMacro.cs" />
     <Compile Include="MVVM\CommandHandler.cs" />
     <Compile Include="MVVM\MacroDataTemplateSelector.cs" />

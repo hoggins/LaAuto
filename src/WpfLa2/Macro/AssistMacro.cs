@@ -14,6 +14,7 @@ namespace WpfLa2.Macro
     private int? _lastHp;
 
     public override string Title => "Assist";
+    public override string DataTemplate => "MacroAssistDt";
 
     protected override async Task Initialize()
     {
@@ -37,6 +38,7 @@ namespace WpfLa2.Macro
       var canSwitch = false;
       while (!Ct.IsCancellationRequested)
       {
+        await Task.Delay(1000, Ct).ConfigureAwait(false);
         using (var snapshot = new LaWndSnapshot(_watchWnd))
         {
           var hp = snapshot.GetTargetHp();
@@ -44,10 +46,7 @@ namespace WpfLa2.Macro
           Status = $"Assist: last {_lastHp} tHP:{hp}%";
           
           if (!hp.HasValue)
-          {
-            await Task.Delay(1000, Ct).ConfigureAwait(false);
             continue;
-          }
 
           if (_lastHp.HasValue && hp > _lastHp)
             canSwitch = true;
@@ -65,8 +64,6 @@ namespace WpfLa2.Macro
           }
           
           _lastHp = hp;
-          
-          await Task.Delay(1000, Ct).ConfigureAwait(false);
         }
       }
     }
