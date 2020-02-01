@@ -38,7 +38,7 @@ namespace WpfLa2.Macro
       var canSwitch = false;
       while (!Ct.IsCancellationRequested)
       {
-        await Task.Delay(500, Ct).ConfigureAwait(false);
+        await Task.Delay(1000, Ct).ConfigureAwait(false);
         int? hp;
         using (var snapshot = new LaClientSnapshot(_watchWnd))
           hp = snapshot.GetTargetHp();

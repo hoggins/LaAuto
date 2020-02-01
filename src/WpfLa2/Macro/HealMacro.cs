@@ -42,14 +42,14 @@ namespace WpfLa2.Macro
 //        if (lastUse - DateTime.Now < TimeSpan.FromSeconds(2.5))
           await Task.Delay(2000, Ct).ConfigureAwait(false);
 
-        for (int i = NoOperationDelay*2; i >= 0 && !Ct.IsCancellationRequested; i--)
+        for (int i = NoOperationDelay; i >= 0 && !Ct.IsCancellationRequested; i--)
         {
           int? hp;
           using (var snapshot = new LaClientSnapshot(_targetWnd))
 
             hp = snapshot.GetPartyHp();
 
-          Status = $"t: {i/2} hp:{hp:0}";
+          Status = $"t: {i} hp:{hp:0}";
 
           if (hp.HasValue)
           {
@@ -63,7 +63,7 @@ namespace WpfLa2.Macro
               break;
           }
 
-          await Task.Delay(500, Ct).ConfigureAwait(false);
+          await Task.Delay(1000, Ct).ConfigureAwait(false);
         }
       }
     }
