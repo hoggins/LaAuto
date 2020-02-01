@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using AutoIt;
 
-namespace WpfLa2
+namespace WpfLa2.Macro
 {
   class InjectContext : IDisposable
   {

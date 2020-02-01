@@ -1,11 +1,9 @@
 using System;
-using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using AutoIt;
+using WpfLa2.La;
 
-namespace WpfLa2
+namespace WpfLa2.Macro
 {
   public class HealMacro : MacroBase
   {

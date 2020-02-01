@@ -1,12 +1,16 @@
 using System;
 using System.Windows.Input;
 
-namespace WpfLa2
+namespace WpfLa2.MVVM
 {
   public class CommandHandler : ICommand
   {
     private Action _action;
     private Func<bool> _canExecute;
+
+    public CommandHandler(Action action) : this(action, () => true)
+    {
+    }
 
     /// <summary>
     /// Creates instance of the command handler

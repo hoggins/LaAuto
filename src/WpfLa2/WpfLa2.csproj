@@ -58,39 +58,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CommandHandler.cs" />
     <Compile Include="DrawUtil.cs" />
     <Compile Include="La\LaMarkup.cs" />
     <Compile Include="La\LaWndSnapshot.cs" />
-    <Compile Include="MacroDataTemplateSelector.cs" />
     <Compile Include="MacroModel.cs" />
-    <Compile Include="MacroWindow.xaml.cs">
-      <DependentUpon>MacroWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MacroWndVm.cs" />
     <Compile Include="Macro\AssistMacro.cs" />
     <Compile Include="Macro\IMacroVm.cs" />
     <Compile Include="Macro\InjectContext.cs" />
     <Compile Include="Macro\MacroBase.cs" />
     <Compile Include="Macro\HealMacro.cs" />
     <Compile Include="Macro\WatchWndMacro.cs" />
-    <Compile Include="MainVm.cs" />
-    <Compile Include="ViewModelBase.cs" />
-    <Page Include="MacroWindow.xaml" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="MVVM\CommandHandler.cs" />
+    <Compile Include="MVVM\MacroDataTemplateSelector.cs" />
+    <Compile Include="MVVM\MacroWindow.xaml.cs">
+      <DependentUpon>MacroWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Page Include="MVVM\MacroWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MVVM\MacroWndVm.cs" />
+    <Compile Include="MVVM\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

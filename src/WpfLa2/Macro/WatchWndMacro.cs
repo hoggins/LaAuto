@@ -1,8 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WpfLa2.La;
 
-namespace WpfLa2
+namespace WpfLa2.Macro
 {
   public class WatchWndMacro : MacroBase
   {

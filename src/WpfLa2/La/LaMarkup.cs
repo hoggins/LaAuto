@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace WpfLa2
+namespace WpfLa2.La
 {
   public static class LaMarkup
   {

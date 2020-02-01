@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Interop;
 using AutoIt;
 
-namespace WpfLa2
+namespace WpfLa2.MVVM
 {
   public partial class MacroWindow : Window
   {

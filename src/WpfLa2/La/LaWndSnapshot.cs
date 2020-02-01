@@ -3,7 +3,7 @@ using System.Drawing;
 using AutoIt;
 using Recognition;
 
-namespace WpfLa2
+namespace WpfLa2.La
 {
   public class LaWndSnapshot : IDisposable
   {

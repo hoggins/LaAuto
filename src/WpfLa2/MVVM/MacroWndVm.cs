@@ -1,8 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using WpfLa2.Macro;
 
-namespace WpfLa2
+namespace WpfLa2.MVVM
 {
   public class MacroWndVm : ViewModelBase
   {

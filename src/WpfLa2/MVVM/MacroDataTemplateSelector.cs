@@ -1,7 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
+using WpfLa2.Macro;
 
-namespace WpfLa2
+namespace WpfLa2.MVVM
 {
   public class MacroDataTemplateSelector : DataTemplateSelector
   {

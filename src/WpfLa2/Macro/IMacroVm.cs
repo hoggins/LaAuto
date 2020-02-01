@@ -1,7 +1,4 @@
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace WpfLa2
+namespace WpfLa2.Macro
 {
   public interface IMacroVm
   {

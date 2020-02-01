@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WpfLa2
+namespace WpfLa2.MVVM
 {
   public abstract class ViewModelBase : INotifyPropertyChanged
   {
