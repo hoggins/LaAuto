@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using AutoIt;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -8,10 +9,13 @@ namespace LaClient
 {
   public class LaClientSnapshot : IDisposable
   {
+    private static object _lock = new object();
+
     private readonly Image<Hsv, byte> _shot;
 
     public LaClientSnapshot(IntPtr hwnd)
     {
+      Monitor.Enter(_lock);
       var rect = AutoItX.WinGetPos(hwnd);
 
       var shotFrame = LaMarkup.ShotFrame;
@@ -43,6 +47,7 @@ namespace LaClient
     public void Dispose()
     {
       _shot.Dispose();
+      Monitor.Exit(_lock);
     }
 
     private static Bitmap TakeScreenShot(Rectangle rect)
