@@ -94,8 +94,18 @@
     </Window.Resources>
 
     <StackPanel DataContext="{Binding Source={StaticResource cx}}">
+        <Button Command="{Binding ToggleCreate}" Content="Toggle create section" />
         <ItemsControl Padding="8,4,8,4"
                       ItemsSource="{Binding MacroLaunchers}">
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding  Source={StaticResource cx}, Path=IsCreateVisible}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Command="{Binding Start}" Content="{Binding Title}" />
