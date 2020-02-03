@@ -7,7 +7,7 @@
         xmlns:mvvm="clr-namespace:WpfLa2.MVVM"
         xmlns:macro="clr-namespace:WpfLa2.Macro"
         mc:Ignorable="d"
-        Title="MacroWindow" Height="400" Width="600">
+        Title="MacroWindow" Height="250" Width="400">
     <Window.Resources>
         <mvvm:MacroWndVm x:Key="cx" />
         <mvvm:MacroDataTemplateSelector x:Key="macroTemplateSelector" />
@@ -18,7 +18,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="MacroHealDt" DataType="{x:Type macro:HealMacro}">
-            <Border Margin="8,4,8,4" BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
+            <Border BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -33,9 +33,13 @@
 
                     <TextBlock Margin="4" Text="Heal macro " FontWeight="Bold" />
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="4" Text="No op delay" />
-                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4" Text="{Binding NoOperationDelay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4"
+                             Text="{Binding NoOperationDelay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="3" />
                     <TextBlock Grid.Column="0" Grid.Row="2" Margin="4" Text="Percent to heal" />
-                    <TextBox Grid.Column="1" Grid.Row="2" Margin="4" Text="{Binding PercentToHeal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="4"
+                             Text="{Binding PercentToHeal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="3" />
 
                     <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Margin="4" Text="{Binding Path=Status}"
                                FontSize="24" />
@@ -44,7 +48,7 @@
 
         </DataTemplate>
         <DataTemplate x:Key="MacroAssistDt" DataType="macro:AssistMacro">
-            <Border Margin="8,4,8,4" BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
+            <Border BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -59,7 +63,9 @@
 
                     <TextBlock Margin="4" Text="Assist macro " FontWeight="Bold" />
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="4" Text="Hp to start DD" />
-                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4" Text="{Binding HpToStartDd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4"
+                             Text="{Binding HpToStartDd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="3" />
 
                     <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Margin="4" Text="{Binding Path=Status}"
                                FontSize="24" />
@@ -67,7 +73,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="MacroSpamButtonDt" DataType="macro:SpamButtonMacro">
-            <Border Margin="8,4,8,4" BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
+            <Border BorderThickness="1" BorderBrush="Black" Background="{Binding Color}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -82,9 +88,11 @@
 
                     <TextBlock Margin="4" Text="Spam macro " FontWeight="Bold" />
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="4" Text="Delay" />
-                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4" Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="4"
+                             Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
                     <TextBlock Grid.Column="0" Grid.Row="2" Margin="4" Text="Key" />
-                    <TextBox Grid.Column="1" Grid.Row="2" Margin="4" Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="4"
+                             Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" />
 
                     <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" Margin="4" Text="{Binding Path=Status}"
                                FontSize="24" />
@@ -93,41 +101,47 @@
         </DataTemplate>
     </Window.Resources>
 
-    <StackPanel DataContext="{Binding Source={StaticResource cx}}">
-        <Button Command="{Binding ToggleCreate}" Content="Toggle create section" />
-        <ItemsControl Padding="8,4,8,4"
-                      ItemsSource="{Binding MacroLaunchers}">
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding  Source={StaticResource cx}, Path=IsCreateVisible}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Command="{Binding Start}" Content="{Binding Title}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <ItemsControl
-            ItemsSource="{Binding ActiveMacro}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <UserControl Grid.Column="0"
-                                     Content="{Binding Macro}"
-                                     ContentTemplateSelector="{StaticResource macroTemplateSelector}" />
-                        <Button Grid.Column="1" Content="Stop" Command="{Binding Stop}" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel DataContext="{Binding Source={StaticResource cx}}">
+            <Button Command="{Binding ToggleCreate}" Content="MENU" />
+
+            <ItemsControl Padding="8,4,8,4"
+                          ItemsSource="{Binding MacroLaunchers}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding  Source={StaticResource cx}, Path=IsCreateVisible}"
+                                         Value="False">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding Start}" Content="{Binding Title}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl
+                ItemsSource="{Binding ActiveMacro}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Margin="8,0,4,0" Content="Stop" Command="{Binding Stop}" />
+                            <UserControl Grid.Column="1"
+                                         Margin="4,0,8,0"
+                                         Content="{Binding Macro}"
+                                         ContentTemplateSelector="{StaticResource macroTemplateSelector}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
 </Window>

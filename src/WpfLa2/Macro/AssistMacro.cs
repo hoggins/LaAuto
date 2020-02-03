@@ -18,10 +18,10 @@ namespace WpfLa2.Macro
 
     protected override async Task Initialize()
     {
-      Status = "Go to window to watch target HP";
+      Status = "Select where to watch";
       _watchWnd = await MacroModel.GetClientObserve(Ct);
 
-      Status = "Go to window to click assist";
+      Status = "Select where to click";
       IntPtr t = default;
       while (!Ct.IsCancellationRequested)
       {
@@ -42,7 +42,7 @@ namespace WpfLa2.Macro
         var watch = MacroModel.GetClientModel(_watchWnd);
         var hp = watch.TargetHp;
 
-        Status = $"Assist: last {_lastHp} tHP:{hp}%";
+        Status = $"tHP:{hp}% last:{_lastHp}%";
 
         if (!watch.TargetHp.HasValue)
           continue;

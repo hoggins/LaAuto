@@ -56,6 +56,7 @@ namespace WpfLa2.MVVM
 
     private void StartMacro<T>() where T : IMacroVm, new()
     {
+      IsCreateVisible = false;
 
       var macro = new T();
       macro.Start();
