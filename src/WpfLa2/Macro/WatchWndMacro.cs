@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LaClient;
@@ -21,13 +22,17 @@ namespace WpfLa2.Macro
       while (!Ct.IsCancellationRequested)
       {
         await Task.Delay(100, Ct).ConfigureAwait(false);
-        Thread.Sleep(500);
         using (var snapshot = new LaClientSnapshot(_targetWnd))
         {
-          var hp = snapshot.GetPartyHp();
-          var thp = snapshot.GetTargetHp();
+          var client = snapshot.Build();
+          var sb = new StringBuilder();
+          sb.AppendLine($"tHp: {client.TargetHp}%");
+          foreach (var member in client.Party)
+          {
+            sb.AppendLine($"party hp {member.Hp}% mp {member.Mp}");
+          }
 
-          Status = $"hp:{hp:0} thp:{thp}";
+          Status = sb.ToString();
         }
       }
     }

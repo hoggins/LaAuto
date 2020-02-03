@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoIt;
 using LaClient;
@@ -25,7 +26,6 @@ namespace WpfLa2.Macro
 
     protected override async Task Run()
     {
-//      var lastUse = new DateTime();
       while (!Ct.IsCancellationRequested)
       {
         SetWarn(true);
@@ -37,19 +37,14 @@ namespace WpfLa2.Macro
 
         SetWarn(false);
 
-//        lastUse = DateTime.Now;
+        await Task.Delay(2000, Ct).ConfigureAwait(false);
 
-//        if (lastUse - DateTime.Now < TimeSpan.FromSeconds(2.5))
-          await Task.Delay(2000, Ct).ConfigureAwait(false);
-
-        for (int i = NoOperationDelay; i >= 0 && !Ct.IsCancellationRequested; i--)
+        for (int i = NoOperationDelay*5; i >= 0 && !Ct.IsCancellationRequested; i--)
         {
-          int? hp;
-          using (var snapshot = new LaClientSnapshot(_targetWnd))
+          var client = MacroModel.GetClientModel(_targetWnd);
+          var hp = client.Party.FirstOrDefault()?.Hp;
 
-            hp = snapshot.GetPartyHp();
-
-          Status = $"t: {i} hp:{hp:0}";
+          Status = $"t: {i/5} hp:{hp:0}";
 
           if (hp.HasValue)
           {
@@ -63,7 +58,7 @@ namespace WpfLa2.Macro
               break;
           }
 
-          await Task.Delay(1000, Ct).ConfigureAwait(false);
+          await Task.Delay(200, Ct).ConfigureAwait(false);
         }
       }
     }

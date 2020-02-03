@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="LaBar.cs" />
     <Compile Include="LaClientSnapshot.cs" />
+    <Compile Include="LaClientModel.cs" />
     <Compile Include="LaMarkup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

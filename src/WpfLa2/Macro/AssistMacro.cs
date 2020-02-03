@@ -38,14 +38,13 @@ namespace WpfLa2.Macro
       var canSwitch = false;
       while (!Ct.IsCancellationRequested)
       {
-        await Task.Delay(1000, Ct).ConfigureAwait(false);
-        int? hp;
-        using (var snapshot = new LaClientSnapshot(_watchWnd))
-          hp = snapshot.GetTargetHp();
+        await Task.Delay(200, Ct).ConfigureAwait(false);
+        var watch = MacroModel.GetClientModel(_watchWnd);
+        var hp = watch.TargetHp;
 
         Status = $"Assist: last {_lastHp} tHP:{hp}%";
 
-        if (!hp.HasValue)
+        if (!watch.TargetHp.HasValue)
           continue;
 
         if (_lastHp.HasValue && hp > _lastHp)
@@ -60,8 +59,8 @@ namespace WpfLa2.Macro
             AutoItX.WinActivate(_actWnd);
             AutoItX.Send("{NUMPAD0}");
           }
-
           SetWarn(false);
+          await Task.Delay(1500, Ct).ConfigureAwait(false);
         }
 
         _lastHp = hp;
