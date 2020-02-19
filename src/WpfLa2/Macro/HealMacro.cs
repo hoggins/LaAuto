@@ -17,6 +17,8 @@ namespace WpfLa2.Macro
 
     public int PercentToHeal { get; set; } = 68;
 
+    private DateTime _lastHealTime;
+
     protected override async Task Initialize()
     {
       Status = "Select window to watch and click heal";
@@ -26,41 +28,46 @@ namespace WpfLa2.Macro
 
     protected override async Task Run()
     {
+      const int baseButton = 2;
       while (!Ct.IsCancellationRequested)
       {
-        SetWarn(true);
-        using (new InjectContext())
+        if (_lastHealTime.AddSeconds(NoOperationDelay) < DateTime.UtcNow)
+          await DoHeal(baseButton.ToString());
+
+
+        var model = MacroModel.GetClientModel(_targetWnd);
+
+        var hpStr = string.Join(" ", model.Party.Select(m => $"hp:{m.Hp:0}"));
+        var cd = (DateTime.UtcNow - _lastHealTime).TotalSeconds;
+        Status = $"t: {cd:0} " + hpStr;
+
+        for (int pIndex = 0; pIndex < model.Party.Count; pIndex++)
         {
-          AutoItX.WinActivate(_targetWnd);
-          AutoItX.Send("2");
-        }
-
-        SetWarn(false);
-
-        await Task.Delay(2000, Ct).ConfigureAwait(false);
-
-        for (int i = NoOperationDelay*5; i >= 0 && !Ct.IsCancellationRequested; i--)
-        {
-          var client = MacroModel.GetClientModel(_targetWnd);
-          var hp = client.Party.FirstOrDefault()?.Hp;
-
-          Status = $"t: {i/5} hp:{hp:0}";
-
-          if (hp.HasValue)
+          var m = model.Party[pIndex];
+          if (m.Hp.HasValue && m.Hp < PercentToHeal)
           {
-            if (hp < 5)
-            {
-              Status = "Consider dead " + DateTime.Now.ToString("g");
-              return;
-            }
-
-            if (hp < PercentToHeal)
-              break;
+            await DoHeal((baseButton + pIndex).ToString());
+            break;
           }
-
-          await Task.Delay(200, Ct).ConfigureAwait(false);
         }
+
+        await Task.Delay(200, Ct).ConfigureAwait(false);
+
       }
+    }
+
+    private async Task DoHeal(string button)
+    {
+      SetWarn(true);
+      using (new InjectContext())
+      {
+        AutoItX.WinActivate(_targetWnd);
+        AutoItX.Send(button);
+      }
+      SetWarn(false);
+      await Task.Delay(2000, Ct).ConfigureAwait(false);
+
+      _lastHealTime = DateTime.UtcNow;
     }
   }
 }
