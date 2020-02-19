@@ -38,7 +38,7 @@ namespace LaClient
         if (hp.HasValue || mp.HasValue)
         {
           // add dead members
-          for (int j = 0; j < i; j++)
+          for (var j = m.Party.Count; j < i; j++)
             m.Party.Add(new LaClientMember());
 
           m.Party.Add(new LaClientMember
